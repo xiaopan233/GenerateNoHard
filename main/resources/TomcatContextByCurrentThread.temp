@@ -1,0 +1,5 @@
+try{
+    org.apache.catalina.loader.WebappClassLoaderBase contextClassLoader = (org.apache.catalina.loader.WebappClassLoaderBase) java.lang.Thread.currentThread().getContextClassLoader();
+    org.apache.catalina.WebResourceRoot resources = contextClassLoader.getResources();
+    return (org.apache.catalina.core.StandardContext) resources.getContext();
+}catch(Exception e){return null;}

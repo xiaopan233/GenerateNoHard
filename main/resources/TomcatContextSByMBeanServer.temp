@@ -1,0 +1,34 @@
+{
+java.util.ArrayList contexts = new java.util.ArrayList();
+try{
+    javax.management.MBeanServer mBeanServer = org.apache.tomcat.util.modeler.Registry.getRegistry(null, null).getMBeanServer();
+    java.lang.reflect.Field mbsInterceptorField = mBeanServer.getClass().getDeclaredField("mbsInterceptor");
+    mbsInterceptorField.setAccessible(true);
+    Object mbsInterceptor = mbsInterceptorField.get(mBeanServer);
+
+    java.lang.reflect.Field repositoryField = mbsInterceptor.getClass().getDeclaredField("repository");
+    repositoryField.setAccessible(true);
+    Object repository = repositoryField.get(mbsInterceptor);
+
+    java.lang.reflect.Field domainTbField = repository.getClass().getDeclaredField("domainTb");
+    domainTbField.setAccessible(true);
+    java.util.Map domainTb = (java.util.Map) domainTbField.get(repository);
+    java.util.Map catalina = (java.util.Map) domainTb.get("Catalina");
+    Object[] set = catalina.keySet().toArray();
+
+    org.apache.catalina.loader.WebappLoader webappLoader = null;
+    for (int i = 0; i < set.length; i++) {
+        com.sun.jmx.mbeanserver.NamedObject namedObject = (com.sun.jmx.mbeanserver.NamedObject) catalina.get(set[i]);
+        try{
+            org.apache.tomcat.util.modeler.BaseModelMBean baseModelMBean = (org.apache.tomcat.util.modeler.BaseModelMBean) namedObject.getObject();
+            webappLoader = (org.apache.catalina.loader.WebappLoader) baseModelMBean.getManagedResource();
+            contexts.add((org.apache.catalina.core.StandardContext) webappLoader.getContainer());
+        }
+        catch (java.lang.NoSuchMethodError e){
+            contexts.add((org.apache.catalina.core.StandardContext) webappLoader.getContext());
+        }
+        catch (java.lang.Exception e){}
+    }
+}catch (Exception e) {}
+return contexts;
+}

