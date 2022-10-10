@@ -107,6 +107,7 @@ Jndi注入 - URLClassLoader
 **目前该项目还不支持用maven打包，只能手动用IDEA的Artifacts进行Build。后续我会加上的233。**
 
 # 用法
+最好使用JDK1.8来运行
 
 `-help` 列出帮助选项
 
