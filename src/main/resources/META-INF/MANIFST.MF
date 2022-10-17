@@ -1,4 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: com.Main
-Class-Path: javassist-3.29.2-GA.jar commons-cli-1.5.0.jar
-

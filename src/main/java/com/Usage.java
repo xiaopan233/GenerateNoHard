@@ -131,10 +131,11 @@ public class Usage {
     }
 
     public static void printUsage(){
-        String usage = "java -jar xxx.jar -mode [mode] -encode [encode] -url [URL] -commandArg [argName] -headerPassword [header=value] [additional]\n"
+        String usage = "java -jar GenerateNoHard.jar -mode [mode] -encode [encode] -url [URL] -commandArg [argName] -headerPassword [header=value] [additional]\n"
                 .concat("eg:\n")
-                .concat("java -jar xxx.jar -mode SpringBoot.registerHandler -encode base64 -url /evil -commandArg cmd\n")
-                .concat("java -jar xxx.jar -mode SpringBoot.registerHandler -encode classFile -filePath /class -url /evil -commandArg cmd -headerPassword evil=attack\n")
+                .concat("java -jar GenerateNoHard.jar -mode SpringBoot.registerHandler -encode base64 -url /evil -commandArg cmd\n")
+                .concat("java -jar GenerateNoHard.jar -mode Jndi.Ldap.URLClassLoader -webPath /web -commandArg cmd\n")
+                .concat("java -jar GenerateNoHard.jar -mode SpringBoot.registerHandler -encode classFile -filePath /class -url /evil -commandArg cmd -headerPassword evil=attack\n")
                 .concat("args:\n");
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp(usage, options);

@@ -5,17 +5,12 @@ import com.dto.ClassDto;
 import javassist.*;
 import javassist.bytecode.AccessFlag;
 
+import java.io.File;
 import java.util.HashMap;
 
+import static com.Main.basePath;
+
 public class GenerateAttack {
-    public static String basePath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-    static {
-        if (Main.isDeveloper == true){
-            basePath = basePath + "/jars";
-        }else{
-            basePath = basePath + "/../jars";
-        }
-    }
     public static ClassDto SpringRegisterHandler(String url, String cmd, String header, String headerValue) throws Exception {
         ClassPool classPool = new ClassPool();
         classPool.insertClassPath(basePath + "/javaxServlet/*");

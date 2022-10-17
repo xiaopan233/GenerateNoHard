@@ -99,15 +99,11 @@ Jndi注入 - URLClassLoader
 
 
 # 打包
+**目前项目支持Maven打包啦~，只需要在项目根目录下执行`mvn clean package`即可**
 
-由于依赖Jar放在`jars`目录下，而IDEA直接运行打包后运行的加载路径有些不一样。这里暂时没想到啥高效的解决方法，我是直接通过在`Main类`中设置一个全局变量`isDeveloper`。当`isDeveloper=true`时表示在IDEA环境下，项目从`resources`中加载依赖jar包；当`isDeveloper=false`时表示处于Jar包环境下，项目从**同级**的`jars`中加载依赖jar包。
-
-
-
-**目前该项目还不支持用maven打包，只能手动用IDEA的Artifacts进行Build。后续我会加上的233。**
+依赖Jar放在`jars`目录下，本工具需要依赖这些Jar包生成Payload
 
 # 用法
-最好使用JDK1.8来运行
 
 `-help` 列出帮助选项
 

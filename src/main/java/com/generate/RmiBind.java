@@ -5,16 +5,9 @@ import com.dto.ClassDto;
 import javassist.*;
 
 import java.util.ArrayList;
+import static com.Main.basePath;
 
 public class RmiBind {
-    public static String basePath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-    static {
-        if (Main.isDeveloper == true){
-            basePath = basePath + "/jars";
-        }else{
-            basePath = basePath + "/../jars";
-        }
-    }
 
     public static ClassDto bind(int port) throws Exception {
         ClassPool classPool = new ClassPool();

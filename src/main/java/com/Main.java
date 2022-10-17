@@ -5,6 +5,7 @@ import com.generate.PostGenerate;
 import com.dto.ClassDto;
 import com.generate.GenerateAttack;
 
+import java.io.File;
 import java.util.HashMap;
 
 /*
@@ -21,11 +22,19 @@ todo: registerMapping似乎可以传空？！看看是不是版本问题
 * SpringBoot 用 RegisterHandler方式，实测能打进1.5.22的内存马
 * */
 public class Main {
-    public static boolean isDeveloper = true;
+    public static String basePath = Main.class.getProtectionDomain().getCodeSource().getLocation().getPath();
 
     public static void main(String[] args) {
-
-
+        //Jar包名
+        String[] split = basePath.split(File.separator);
+        String packageName = split[split.length-1];
+        //如果是Jar包
+        if (packageName.contains(".jar")){
+            basePath = basePath.replace(packageName, "");
+            basePath = basePath + "jars";
+        }else{
+            basePath = basePath + "/jars";
+        }
 
         if (!Usage.parseUserArgs(args)) {
             Usage.printUsage();

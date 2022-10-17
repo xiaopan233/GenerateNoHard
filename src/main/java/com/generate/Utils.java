@@ -152,7 +152,8 @@ public class Utils {
     }
 
     public static ArrayList<String> getReadableFiledName(int length){
-        ArrayList<String> usedFiledNames = new ArrayList<>();
+        ArrayList<String> usedFiledNames = new ArrayList<
+                >();
         for (int i = 0; i < length; i++) {
             usedFiledNames.add(readableFiedNames.pop());
         }
