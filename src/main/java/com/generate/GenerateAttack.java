@@ -128,7 +128,6 @@ public class GenerateAttack {
                 break;
         }
 
-
         //generate get context method
         CtMethod contextMethodCtMethod = CtMethod.make(methodDescirpt, tomcatFilterClass);
         tomcatFilterClass.addMethod(contextMethodCtMethod);

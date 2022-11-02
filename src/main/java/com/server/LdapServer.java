@@ -38,7 +38,6 @@ public class LdapServer {
                     SocketFactory.getDefault(),
                     (SSLSocketFactory) SSLSocketFactory.getDefault()
             );
-
             InMemoryDirectoryServerConfig config = new InMemoryDirectoryServerConfig("dc=com"); //指定根dn
             config.setListenerConfigs(inMemoryListenerConfig);
             config.setSchema(null);
@@ -57,9 +56,8 @@ public class LdapServer {
                     + "\njavaFactory=" + className
                     + "\njavaClassName=" + className
                     + "\nobjectClass=" + "javaNamingReference"
-                    + "\n"
+                    + "\nurl=ldap://" + host.getHostAddress() + ":" + ldapServerPort + "/dc=com"
             );
-
 
             ds.startListening();
         } catch (Exception e) {

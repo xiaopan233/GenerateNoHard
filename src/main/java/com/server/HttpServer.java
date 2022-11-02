@@ -8,6 +8,8 @@ public class HttpServer extends Thread{
     private OutputStream outputStream;
     private String basePath;
 
+    private Socket socket;
+
     public static void runServer(String serverIp, int serverPort, String basePath){
         try {
             SocketAddress socketAddress = new InetSocketAddress(serverIp, serverPort);
@@ -22,7 +24,7 @@ public class HttpServer extends Thread{
                 HttpServer httpServer = new HttpServer(accept, serverIp, serverPort, basePath);
                 httpServer.start();
             }
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -31,6 +33,7 @@ public class HttpServer extends Thread{
         try {
             SocketAddress remoteSocketAddress = socket.getRemoteSocketAddress();
             System.out.println("[HTTP Server] " + "Recive from " + remoteSocketAddress.toString());
+            this.socket = socket;
             this.inputStream = socket.getInputStream();
             this.outputStream = socket.getOutputStream();
             this.basePath = basePath;
@@ -120,5 +123,10 @@ public class HttpServer extends Thread{
         //get
         byte[] bytes = socketInRequest();
         socketOutResponse(bytes);
+        try {
+            socket.close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
