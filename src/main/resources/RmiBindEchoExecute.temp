@@ -1,7 +1,4 @@
 {
-    if (!"".equals($1)){
-        return null;
-    }
     java.lang.StringBuffer stringBuffer = new StringBuffer();
     try {
         String[] s = $2.split(" ");

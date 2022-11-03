@@ -163,7 +163,7 @@ public class Utils {
     public static String loadTempFile(String filePath){
         String methodBody = "";
         try {
-            InputStream baseServletIps = GenerateAttack.class.getResourceAsStream(filePath);
+            InputStream baseServletIps = PostGenerate.class.getResourceAsStream(filePath);
             int baseServletSize = 0;
             baseServletSize = baseServletIps.available();
             byte[] baseServletBytes = new byte[baseServletSize];

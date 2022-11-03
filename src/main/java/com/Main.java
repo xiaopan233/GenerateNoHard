@@ -1,10 +1,7 @@
 package com;
 
-import com.generate.Jndi;
-import com.generate.PostGenerate;
+import com.generate.*;
 import com.dto.ClassDto;
-import com.generate.GenerateAttack;
-import com.generate.RmiBind;
 
 import java.io.File;
 import java.util.HashMap;
@@ -66,16 +63,16 @@ public class Main {
         try {
             switch (mode){
                 case "SpringBoot.registerHandler":
-                    classDto = GenerateAttack.SpringRegisterHandler(url, cmd, header, headerValue);
+                    classDto = SpringMvc.SpringRegisterHandler(url, cmd, header, headerValue);
                     break;
                 case "SpringBoot.registerMapping":
-                    classDto = GenerateAttack.springRegisterMapping(url, cmd, header, headerValue);
+                    classDto = SpringMvc.springRegisterMapping(url, cmd, header, headerValue);
                     break;
                 case "Tomcat.6789.Filter":
-                    classDto = GenerateAttack.tomcatFilter(url, cmd, header, headerValue, "6789");
+                    classDto = Tomcat.tomcatFilter(url, cmd, header, headerValue, "6789");
                     break;
                 case "Tomcat.89.Filter":
-                    classDto = GenerateAttack.tomcatFilter(url, cmd, header, headerValue, "89");
+                    classDto = Tomcat.tomcatFilter(url, cmd, header, headerValue, "89");
                     break;
                 case "Jndi.Ldap.URLClassLoader":
                     Jndi.ldapBase(inputArgs);

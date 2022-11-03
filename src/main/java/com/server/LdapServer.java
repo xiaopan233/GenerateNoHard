@@ -13,11 +13,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 public class LdapServer {
-    public static void main(String[] args) throws Exception{
-        //for test
-        runServer(2333, "127.0.0.1", "aa");
-    }
-
     /*
     * serverIp 不填，默认本机
     * */

